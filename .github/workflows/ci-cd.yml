@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -30,6 +30,10 @@ jobs:
       run: |
         docker run -d -p 3000:3000 nodejs-app
 
-    - name: Verify app is running
+    - name: Wait for app to start
       run: |
-        curl http://0.0.0.0:3000
+        for i in {1..10}; do
+          curl --silent http://localhost:3000 && break
+          echo "Waiting for app to start..."
+          sleep 3
+        done
